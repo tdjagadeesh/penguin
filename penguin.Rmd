@@ -1,0 +1,50 @@
+---
+title: "Penguin"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Load packages and read-in penguins.csv data
+
+```{r, include = FALSE}
+library(tidyverse)
+library(car)
+library(onewaytests)
+
+penguins <- read_csv("penguins.csv")
+```
+
+2. Do some exploring
+
+Our question: 
+Is there a sig difference in mean flipper length for female penguins by species (Chinstrap, Gentee, Adelie)?
+
+Should we use ANOVA? - have 3 species 
+
+First, do some exploring.
+
+New functions: with + table for easy counting over multiple factors
+Update species name using case_when
+```{r}
+counts <- with(penguins, table(species, sex))
+
+penguins2 <- penguins %>% 
+  mutate(common_name = 
+           case_when(
+             species =="Chinstrap penguin (Pygoscelis antarctica)" ~ "Chinstrap",
+             species =="Gentoo penguin (Pygoscelis papua)" ~ "Gentoo",
+             species =="Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie"
+           )) %>% 
+  select(-species) %>% 
+  filter(sex == "FEMALE")
+```
+
+-Exploratory Graphs
+-Summary stats
+-Levene's tests for equal variance
+-One way ANOVA
+-Post hoc testing
+
