@@ -48,3 +48,35 @@ penguins2 <- penguins %>%
 -One way ANOVA
 -Post hoc testing
 
+```{r}
+#Exploratory graphs
+hists <- ggplot(penguins2, aes(x = flipper_length))+
+  geom_histogram(aes(fill = common_name))+
+  facet_wrap(~common_name)
+hists
+
+qqplot <- ggplot(penguins2, aes(sample = flipper_length))+
+  geom_qq()+
+  facet_wrap(~common_name)
+qqplot
+
+#Levene's test for equal variance (> 2 groups... if you have two groups, use the F test for equal variances)
+#We'll use the function leveneTest from the 'car' package to do this 
+
+#H0: Variances are equal
+#HA: Variances are unequal
+
+penguin_levene <- leveneTest(flipper_length ~ common_name, data = penguins2)
+penguin_levene #We retain the null hyp of equal variance (p = 0.06)
+
+# OR: Is larger variance greater than 4x the smaller?
+
+variance_table <- penguins2 %>% 
+  group_by(common_name) %>% 
+  summarize(
+    Variance= var(flipper_length))
+variance_table
+
+#No, variance is not 4x greater, so we assume equal variance
+```
+
