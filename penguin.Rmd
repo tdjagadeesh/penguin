@@ -80,3 +80,42 @@ variance_table
 #No, variance is not 4x greater, so we assume equal variance
 ```
 
+3. One-way ANOVA
+
+Now we have tested all the assumptions necessary to perform an ANOVA.
+
+Factor: common_name (species)
+Levels: 3 (Chinstrap, Gentoo, Adelie)
+Random variable: flipper_length (mm)
+
+Is there a sig dif in mean flipper length (mm) for female penguin species?
+
+Two ways to do this: 1)
+```{r}
+# H0: No sig difference in mean flipper length b/w species
+# HA: At least one difference in mean flipper length
+
+penguin_aov <- aov(flipper_length ~ common_name, data = penguins2)
+summary(penguin_aov)
+#p < 0.05
+
+#If these samples all come from the same population, it is highly unlikely that we would get sample means at least this different 
+#At least two samples were taken from populations with different means. Which are different?
+
+```
+
+Mean flipper lengths for Adelie, Gentoo, and Chinstrap penguins are significantly different (F(df) = statistic, p < 0.001, $\alpha$ = 0.05)
+
+But at this point this is kind of misleading....
+
+4. Post-hoc testing using Tukey's HSD
+
+```{r}
+penguin_ph <- TukeyHSD(penguin_aov)
+penguin_ph
+```
+
+Mean flipper lengths for Adelie, Gentoo, and Chinstrap penguins are all significantly different from each other (F(df) = statistic, p < 0.001, $\alpha$ = 0.05, with post-hoc Tukey's HSD, $\alpha$ = 0.05 ).
+
+
+
